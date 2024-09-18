@@ -54,7 +54,7 @@ export default function Header() {
         <div className="relative mx-auto">
           <Input
             type="search"
-            placeholder="Search IMDb"
+            placeholder="Buscar..."
             className="h-8 pl-7 md:w-72 lg:w-[600px]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
