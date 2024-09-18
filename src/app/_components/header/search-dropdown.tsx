@@ -1,15 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { AxiosError } from 'axios';
 import { FilmIcon, Loader2Icon } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
 import { searchMovies } from '@/app/queries';
 import useClickOutside from '@/lib/hooks/use-click-outside';
-import { IMovie } from '@/lib/types';
+import {
+  clearResults,
+  setError,
+  setLoading,
+  setResults,
+} from '@/lib/store/slices/search';
+import { AppDispatch, RootState } from '@/lib/store/store';
 import { getImageUrl, getYear } from '@/lib/utils';
 
 interface SearchDropdownProps {
@@ -21,8 +28,10 @@ export default function SearchDropdown({
   search,
   setSearch,
 }: SearchDropdownProps) {
-  const [movies, setMovies] = useState<IMovie[] | undefined>();
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { results, isLoading } = useSelector(
+    (state: RootState) => state.search,
+  );
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -32,25 +41,31 @@ export default function SearchDropdown({
     const getMovies = async () => {
       if (!search) return;
 
-      try {
-        setIsLoading(true);
+      dispatch(setLoading(true));
 
+      try {
         const data = await searchMovies(search);
 
-        setMovies(data.results);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast.error(`Error de API: ${error.message}`);
+        dispatch(setResults(data.results));
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          dispatch(setError(`Error de API: ${err.message}`));
+          toast.error(`Error de API: ${err.message}`);
         } else {
-          toast.error(`Error inesperado: ${String(error)}`);
+          dispatch(setError(`Error inesperado: ${String(err)}`));
+          toast.error(`Error inesperado: ${String(err)}`);
         }
       } finally {
-        setIsLoading(false);
+        dispatch(setLoading(false));
       }
     };
 
     getMovies();
-  }, [search]);
+
+    return () => {
+      dispatch(clearResults());
+    };
+  }, [search, dispatch]);
 
   return (
     <div
@@ -63,7 +78,7 @@ export default function SearchDropdown({
         </div>
       ) : (
         <>
-          {movies?.slice(0, 5).map((movie) => (
+          {results?.slice(0, 5).map((movie) => (
             <Link
               key={movie.id}
               href={`/movie/${movie.id}`}
