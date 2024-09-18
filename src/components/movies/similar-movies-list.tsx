@@ -2,25 +2,29 @@
 
 'use client';
 
-import { getMovies } from '@/app/queries';
+import { getSimilarMovies } from '@/app/queries';
 import { useInfiniteScroll } from '@/lib/hooks/use-infinite-scroll';
 import { IMovie } from '@/lib/types';
 
 import { Movie } from './movie';
 
-interface MovieListProps {
+interface SimilarMoviesListProps {
+  id: number;
   initialMovies: IMovie[];
 }
 
-export function MovieList({ initialMovies }: MovieListProps) {
-  const fetchMovies = async (page: number) => {
-    const { results, total_pages } = await getMovies({ page });
+export function SimilarMoviesList({
+  id,
+  initialMovies,
+}: SimilarMoviesListProps) {
+  const fetchSimilarMovies = async (page: number) => {
+    const { results, total_pages } = await getSimilarMovies({ id, page });
 
     return { results, total_pages };
   };
 
   const { items: movies, lastItemRef } = useInfiniteScroll<IMovie>({
-    fetchFunction: fetchMovies,
+    fetchFunction: fetchSimilarMovies,
     initialData: initialMovies,
   });
 

@@ -7,13 +7,21 @@ import {
   IMovieDetail,
   IVideo,
   NonPaginatedResponse,
+  PaginatedRequest,
   PaginatedResponse,
 } from '@/lib/types';
 
-export async function getMovies(): Promise<PaginatedResponse<IMovie>> {
+export async function getMovies(
+  params: PaginatedRequest = {},
+): Promise<PaginatedResponse<IMovie>> {
   const res = await axios.get(
     `${process.env.TMDB_API_URL}/3/movie/popular?api_key=${process.env.TMDB_API_KEY}`,
+    {
+      params,
+    },
   );
+
+  console.log('eliasss', await res.data);
 
   return res.data;
 }
@@ -26,9 +34,9 @@ export async function getMovie(id: string): Promise<IMovieDetail> {
   return res.data;
 }
 
-export async function getSimilarMovies(
-  id: string,
-): Promise<PaginatedResponse<IMovie>> {
+export async function getSimilarMovies({
+  id,
+}: PaginatedRequest & { id: number }): Promise<PaginatedResponse<IMovie>> {
   const res = await axios.get(
     `${process.env.TMDB_API_URL}/3/movie/${id}/similar?api_key=${process.env.TMDB_API_KEY}`,
   );
@@ -37,10 +45,11 @@ export async function getSimilarMovies(
 }
 
 export async function searchMovies(
-  query: string,
+  params: PaginatedRequest & { query: string },
 ): Promise<PaginatedResponse<IMovie>> {
   const res = await axios.get(
-    `${process.env.TMDB_API_URL}/3/search/movie?query=${query}&api_key=${process.env.TMDB_API_KEY}`,
+    `${process.env.TMDB_API_URL}/3/search/movie?api_key=${process.env.TMDB_API_KEY}`,
+    { params },
   );
 
   return res.data;

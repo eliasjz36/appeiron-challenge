@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { FilmIcon } from 'lucide-react';
 
 import { getMovie, getSimilarMovies } from '@/app/queries';
-import { MovieList } from '@/components/movies/movie-list';
+import { SimilarMoviesList } from '@/components/movies/similar-movies-list';
 import { Badge } from '@/components/ui/badge';
 import { Ratings } from '@/components/ui/ratings';
 import { getImageUrl } from '@/lib/utils';
@@ -16,7 +16,7 @@ interface MoviePageProps {
 
 export default async function MoviePage({ params }: MoviePageProps) {
   const movie = await getMovie(params.id);
-  const similarMovies = await getSimilarMovies(params.id);
+  const similarMovies = await getSimilarMovies({ id: Number(params.id) });
 
   return (
     <div className="min-h-screen space-y-10 p-8">
@@ -73,7 +73,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold">Similar Movies</h2>
 
-        <MovieList movies={similarMovies.results} />
+        <SimilarMoviesList
+          id={movie.id}
+          initialMovies={similarMovies.results}
+        />
       </div>
     </div>
   );

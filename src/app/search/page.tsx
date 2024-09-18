@@ -1,4 +1,4 @@
-import { MovieList } from '@/components/movies/movie-list';
+import { MovieResultsList } from '@/components/movies/movie-results-list';
 
 import { searchMovies } from '../queries';
 
@@ -11,7 +11,7 @@ interface SearchPageProps {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q } = searchParams;
 
-  const { results: movies } = await searchMovies(q);
+  const { results: movies } = await searchMovies({ query: q });
 
   return (
     <main className="min-h-screen space-y-8 p-8">
@@ -19,7 +19,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         Resultados para: &quot;{q}&quot;
       </h1>
 
-      <MovieList movies={movies} />
+      <MovieResultsList query={q} initialMovies={movies} />
     </main>
   );
 }
