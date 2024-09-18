@@ -117,7 +117,7 @@ export default function SearchDropdown({
             onClick={() => setSearch('')}
           >
             <p className="w-full p-2 hover:bg-muted-foreground/10">
-              Ver todos los resultados para &quot;{search}&quot;
+              See all results for &quot;{search}&quot;
             </p>
           </Link>
         </>

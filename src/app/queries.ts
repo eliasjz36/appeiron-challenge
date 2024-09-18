@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import {
   IMovie,
+  IMovieDetail,
   IVideo,
   NonPaginatedResponse,
   PaginatedResponse,
@@ -17,7 +18,7 @@ export async function getMovies(): Promise<PaginatedResponse<IMovie>> {
   return res.data;
 }
 
-export async function getMovie(id: string): Promise<IMovie> {
+export async function getMovie(id: string): Promise<IMovieDetail> {
   const res = await axios.get(
     `${process.env.TMDB_API_URL}/3/movie/${id}?api_key=${process.env.TMDB_API_KEY}`,
   );
@@ -27,7 +28,7 @@ export async function getMovie(id: string): Promise<IMovie> {
 
 export async function getSimilarMovies(
   id: string,
-): Promise<PaginatedResponse<IMovie[]>> {
+): Promise<PaginatedResponse<IMovie>> {
   const res = await axios.get(
     `${process.env.TMDB_API_URL}/3/movie/${id}/similar?api_key=${process.env.TMDB_API_KEY}`,
   );

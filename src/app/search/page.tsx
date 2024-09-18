@@ -14,7 +14,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { results: movies } = await searchMovies(q);
 
   return (
-    <main className="space-y-8 p-8">
+    <main className="min-h-screen space-y-8 p-8">
       <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
         Resultados para: &quot;{q}&quot;
       </h1>
