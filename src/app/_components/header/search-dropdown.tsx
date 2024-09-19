@@ -44,7 +44,7 @@ export default function SearchDropdown({
       dispatch(setLoading(true));
 
       try {
-        const data = await searchMovies(search);
+        const data = await searchMovies({ query: search });
 
         dispatch(setResults(data.results));
       } catch (err) {

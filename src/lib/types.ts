@@ -5,6 +5,10 @@ export interface PaginatedResponse<T> {
   total_pages: number;
 }
 
+export interface PaginatedRequest {
+  page?: number;
+}
+
 export interface NonPaginatedResponse<T> {
   id: string;
   results: T[];
